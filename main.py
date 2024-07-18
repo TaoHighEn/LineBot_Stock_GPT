@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 import openai
 import pandas as pd
 
-load_dotenv('.env.example')
+load_dotenv('.env')
 
 app = Flask(__name__)
 print(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
