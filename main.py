@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 import openai
 import pandas as pd
 
-load_dotenv('.env')
+load_dotenv('.env.example')
 
 app = Flask(__name__)
 print(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
@@ -72,6 +72,16 @@ def callback():
         )
         abort(400)
     return 'OK'
+
+@app.route("/info", methods=['GET'])
+def info():
+
+    try:
+        print("info in")
+        result = stock_util.getTopStock()
+    except Exception as ex:
+        print(ex.args)
+    return ""
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):

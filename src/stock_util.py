@@ -45,16 +45,6 @@ def calculate_indicators(df):
   t_df = pd.DataFrame()
   t_df['RSI'] = ta.rsi(df['Close'], length=14)
   t_df['MACD'] = ta.macd(df['Close'], length=12, fast=26, slow=9)
-
-  # RSI
-  # df['RSI'] = ta.rsi(df['Close'], length=7)
-  # # MACD
-  # macd = ta.macd(df['Close'], fast=12, slow=26, signal=9)
-  # df = pd.concat([df, macd], axis=1)
-  # # KD
-  # stoch = ta.stoch(df['High'], df['Low'], df['Close'])
-  # df = pd.concat([df, stoch], axis=1)
-  # return df
   return t_df
 
 # 簡單移動平均線SMA
@@ -103,24 +93,16 @@ def get_cci_func(df,period=20):
   return df0.ta.cci(period,append=True)
 
 # 個股分析_取得資料表格
-def get_stock_info(stock_id,period=90):
+def get_stock_info(stock_id,period=30):
   end = datetime.today()
   start = end - timedelta(days=period)
   stock_data = get_stock_data(stock_id, start, end)
   stock_info = all_strategy_info(stock_data)
   return stock_info.tail(5)
 
+#取得各項指標
 def all_strategy_info(df):
   u_df = df.copy(deep=True)
-  # u_df = get_sma_func(u_df)
-  # u_df = get_ema_func(u_df)
-  # u_df = get_rsi_func(df)
-  # u_df = get_kd_func(df)
-  # u_df = get_macd_func(df)
-  # u_df = get_atr_func(u_df)
-  # u_df = get_cci_func(u_df)
-  # u_df = get_bband_func(u_df)
-  # u_df = get_cmf_func(u_df)
   u_df.ta.sma(close='close',append=True)
   u_df.ta.ema(append=True)
   u_df.ta.rsi(append=True)
@@ -131,3 +113,16 @@ def all_strategy_info(df):
   u_df.ta.cmf(append=True)
   u_df.ta.cci(append=True)
   return u_df
+
+#取得全部股票篩，取得漲跌Top 10
+def getTopStock():
+  link = 'https://www.twse.com.tw/exchangeReport/STOCK_DAY_ALL?response=open_data'
+  data = pd.read_csv(link)
+  # ['證券代號', '證券名稱', '成交股數', '成交金額', '開盤價',
+  #  '最高價', '最低價', '收盤價', '漲跌價差', '成交筆數']
+  data.columns = ['STOCK_SYMBOL', 'NAME', 'TRADE_VOLUME', 'TRADE_VALUE', 
+                'OPEN', 'HIGH' ,'LOW', 'CLOSE', 'PRICE_CHANGE', 'TRANSACTION']
+  # stock_info = get_stock_data()
+
+  result = data
+  return result
